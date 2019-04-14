@@ -110,7 +110,7 @@ export const useSampler = (state, url) => {
       }
       source.buffer = audio.buffer
       source.connect(destination)
-      let offset
+      let offset = 0
       let duration
       if (start) {
         offset = state.duration * start
