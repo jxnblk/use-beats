@@ -102,11 +102,17 @@ export const useSampler = (state, url) => {
       // monophonic
       if (audio.source) audio.source.stop(time)
       const source = context.createBufferSource()
-      let destination = context.destination
+
+      const fade = context.createGain()
+      fade.connect(context.destination)
+      fade.gain.value = 0
+      fade.gain.linearRampToValueAtTime(1, time + .005)
+      let destination = fade
+
       if (volume) {
         destination = context.createGain()
         destination.gain.value = volume
-        destination.connect(context.destination)
+        destination.connect(fade)
       }
       source.buffer = audio.buffer
       source.connect(destination)
@@ -120,7 +126,11 @@ export const useSampler = (state, url) => {
         if (length) source.loopEnd = state.duration * length
         if (start) source.loopStart = state.duration * start
       } else {
-        if (length) duration = state.duration * length
+        if (length) {
+          duration = state.duration * length
+          fade.gain.linearRampToValueAtTime(1, time + duration - .005)
+          fade.gain.linearRampToValueAtTime(0, time + duration)
+        }
       }
       if (pitch) source.playbackRate.value = pitch
 
