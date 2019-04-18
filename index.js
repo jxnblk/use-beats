@@ -178,6 +178,7 @@ export const PlayPause = props => {
       {...props}
       children={props.children || state.playing ? 'Pause' : 'Play'}
       onClick={e => {
+        e.stopPropagation()
         state.setState({ playing: !state.playing })
       }}
     />
