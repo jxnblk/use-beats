@@ -85,7 +85,7 @@ export const useSampler = (state, url) => {
       const buffer = await context.decodeAudioData(arr)
       setAudio({ buffer })
     }
-    if (!audio.buffer && context.decodeAudioData) getAudio()
+    if (context.decodeAudioData) getAudio()
   }, [ context, url ])
 
   const play = (time, {
